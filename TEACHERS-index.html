@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="A short survey.">
+
+  <title>here we are</title>
+
+  <link rel="icon" type="image/svg+xml" href="eye.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <noscript><p style="padding:26px">this page needs javascript.</p></noscript>
+
+  <!-- Background gif layer (see BACKGROUND_GIF in script.js). Empty and invisible until you set one. -->
+  <div id="bg" aria-hidden="true"></div>
+
+  <!-- 1. intro: the lines are typed out one after another -->
+  <section id="intro" class="screen on" aria-label="Introduction">
+    <div class="center">
+      <div class="intro-stack">
+
+        <div id="msg" class="intro-line">
+          <span class="line-wrap">
+            <span class="typed" aria-hidden="true"><span id="msgText"></span></span><span id="msgGhost" class="ghost" aria-hidden="true"></span>
+          </span>
+        </div>
+        <div id="introSr" class="sr" role="status" aria-live="polite"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. survey -->
+  <section id="survey" class="screen" aria-label="Survey">
+    <!-- the question: types itself in, then the answer box / sliders appear below it -->
+    <div id="qstage" class="wrap">
+      <div id="progress" class="dim"></div>
+      <h2 id="prompt"></h2>
+      <div id="inputs" hidden>
+        <div id="answerArea"></div>
+        <div id="hint" class="dim" role="status" aria-live="polite"></div>
+        <p class="actions">
+          <button id="go" type="button">Enter</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- the AI's reply: shown on its own after each answer -->
+    <div id="replyStage" class="center" hidden>
+      <div id="reply" class="reply-line" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 3. end -->
+  <section id="end" class="screen" aria-label="Finished">
+    <div class="center">
+      <div>
+        <div id="endText" class="big"></div>
+        <p id="endLink" class="dim" hidden><a id="archiveLink" href="#">[ open the archive ]</a></p>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
