@@ -4,7 +4,7 @@
    the welcome line, then the connecting stretch, then "Connected.", then "Let's begin." and the first question. */
 const WELCOME_HOLD_MS = 1800;     /* how long the welcome line stays up before it clears */
 const INTRO_LINES = {
-  welcome: "Welcome to the Student-Teacher survey.",
+  welcome: "Welcome to the survey.",
   connecting: "Connecting. .",
   connected: "Connected.",
   begin: "Let's begin."
@@ -67,13 +67,16 @@ const NEXT_PAUSE_MS = 500;        /* break between the reply disappearing and th
                     { id:"x", type:"ratings", prompt:"...", items:["One","Two"], colors:["#ff5d5d","#5aa9ff"] } */
 const QUESTIONS = [
   { id:"q1", type:"text", prompt:"What do your students call you?" },
-  { id:"song", type:"song", prompt:"What song describes how you feel right now?" },
+  { id:"q2", type:"text", prompt:"Do you think your students enjoy your teaching style?" },
+  { id:"q3", type:"text", prompt:"What is your favorite artist/band?" },
+  { id:"song", type:"song", prompt:"Enter a song that describes how you feel currently." },
   { id:"q4", type:"text", prompt:"Tell us something about yourself that your students don't know." },
   { id:"why", type:"text", prompt:"What made you become a teacher?" },
-  { id:"q5", type:"text", prompt:"What moment in your career are you proudest of. .?" },
-  { id:"q6", type:"text", prompt:"Do you believe in free will, or is everything predetermined?" },
-  { id:"q7", type:"text", prompt:"What do you want your students to remember about you?" },
-  { id:"q8", type:"text", prompt:"What are you afraid of?" }
+  { id:"q5", type:"text", prompt:"What moment in your career are you proudest of?" },
+  { id:"q6", type:"text", prompt:"Are you a cat person or a dog person (or something else entirely)?" },
+  { id:"q7", type:"text", prompt:"What's your favorite sport?" },
+  { id:"q8", type:"text", prompt:"What do you want your students to remember about you?" },
+  { id:"q9", type:"text", prompt:"Milk before cereal, or cereal before milk?" }
 ];
 
 /* Wiring (leave blank until you have them):
@@ -498,12 +501,12 @@ function buildSongPicker(area){
   const status = document.createElement("div");
   status.id = "songStatus"; status.className = "dim";
   status.setAttribute("role", "status"); status.setAttribute("aria-live", "polite");
-  status.textContent = "type a song name (and the artist, if you can) and search.";
+  status.textContent = "type a song name (and the artist) and search";
   const list = document.createElement("div");
   list.className = "song-results";
 
   function showChosen(){
-    chosen.textContent = selectedSong ? "selected: " + selectedSong.title + "  (press Confirm to lock it in)" : "";
+    chosen.textContent = selectedSong ? "selected: " + selectedSong.title + "  " : "";
     list.querySelectorAll(".song-pick").forEach(b => {
       const on = !!selectedSong && b.dataset.id === selectedSong.id;
       b.classList.toggle("sel", on);
@@ -521,15 +524,15 @@ function buildSongPicker(area){
       selectedSong = null;
       showChosen();
       el.disabled = true;
-      status.textContent = "that one can't be played here. pick another.";
+      status.textContent = "that one can't be played here, pick another";
     });
   }
 
   async function search(){
     if (songSearching) return;
     const q = input.value.trim();
-    if (q.length < 2){ status.textContent = "type a song or artist first."; return; }
-    if (!SEARCH_URL){ status.textContent = "song search isn't set up yet."; return; }
+    if (q.length < 2){ status.textContent = "type a song or artist first"; return; }
+    if (!SEARCH_URL){ status.textContent = "song search isn't set up yet"; return; }
     songSearching = true; btn.disabled = true;
     status.textContent = "searching . . .";
     list.innerHTML = "";                              /* the song they already picked stays picked (and playing) */
@@ -541,8 +544,8 @@ function buildSongPicker(area){
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error(data.error || ("status " + res.status));
-      if (!data.results.length){ status.textContent = "nothing found. try different words."; return; }
-      status.textContent = "click one to hear it:";
+      if (!data.results.length){ status.textContent = "nothing found, try different words"; return; }
+      status.textContent = "click one to hear it";
       data.results.forEach(item => {
         const b = document.createElement("button");
         b.type = "button"; b.className = "song-pick"; b.setAttribute("aria-pressed", "false");
@@ -652,7 +655,7 @@ async function submitAnswer(){
   if (busy) return;
   const q = QUESTIONS[idx];
   const a = readAnswer(q);
-  if (!a){ $("hint").textContent = q.type === "song" ? "search for a song, click one, then press Confirm." : "type something first."; return; }
+  if (!a){ $("hint").textContent = q.type === "song" ? "search for a song" : "type something first"; return; }
 
   busy = true;
   answers[q.id] = a.value;
